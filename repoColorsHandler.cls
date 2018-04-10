@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "CorailIteration"
+Attribute VB_Name = "ColorsHandler"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
@@ -30,72 +30,35 @@ Attribute VB_Exposed = False
 'OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 'SOFTWARE.
 
-Private item As CorailItem
-Private cItems As Collection
-
-Private pn As String
-Private stock As Long
-Private recv As Long
-Private backlog As Long
-
-Public Property Get getBacklog() As Long
-
-    getBacklog = CLng(backlog)
-End Property
 
 
-Public Property Get getPN() As String
-    
-    getPN = pn
-End Property
+Public colorPurpleMain As Long
+Public colorPurpleMore As Long
+Public colorPurpleDark As Long
+Public colorPurpleLight As Long
 
-Public Property Get getStock() As Long
-    getStock = stock
-End Property
+Public colorMattBlueMain As Long
+Public colorMattBlueMore As Long
+Public colorMattBlueDark As Long
+Public colorMattBlueLight As Long
 
-Public Sub setStock(arg As Long)
-    
-    stock = CLng(arg)
-End Sub
-
-Public Property Get getRecv() As Long
-    getRecv = recv
-End Property
-
-Public Sub setRecv(arg As Long)
-    
-    recv = CLng(arg)
-End Sub
-
-Public Sub setBacklog(arg As Long)
-    
-    backlog = CLng(arg)
-End Sub
-
-
-
-' niezwykle wazna metoda dodawania dla kolekcji ktora w tej klasie jest prywatna
-' nie mozemy tak po prostu dodac byle czego!
-' korzystamy tylko i wylacznie z tego suba - wymusza on na wpisywaniu tylko okreslonego typu do argumentu
-Public Sub addItem(i As CorailItem)
-    
-    cItems.Add i
-End Sub
-
-
-Public Property Get pItems() As Collection
-    Set pItems = cItems
-End Property
+Public colorMattBlack As Long
 
 
 
 Private Sub Class_Initialize()
-    Set cItems = New Collection
-    stock = 0
-    recv = 0
-    backlog = 0
+
+    Me.colorMattBlack = RGB(20, 20, 20)
+    
+    Me.colorMattBlueDark = RGB(6, 12, 27)
+    Me.colorMattBlueLight = RGB(128, 153, 216)
+    Me.colorMattBlueMain = RGB(46, 65, 114)
+    Me.colorMattBlueMore = RGB(79, 102, 158)
+    
+    Me.colorPurpleDark = RGB(11, 6, 27)
+    Me.colorPurpleLight = RGB(152, 129, 218)
+    Me.colorPurpleMain = RGB(65, 48, 117)
+    Me.colorPurpleMore = RGB(89, 42, 113)
+    
 End Sub
 
-Private Sub Class_Terminate()
-    Set cItems = Nothing
-End Sub

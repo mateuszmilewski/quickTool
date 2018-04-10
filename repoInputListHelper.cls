@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "CorailIteration"
+Attribute VB_Name = "InputListHelper"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
@@ -30,72 +30,32 @@ Attribute VB_Exposed = False
 'OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 'SOFTWARE.
 
-Private item As CorailItem
-Private cItems As Collection
-
-Private pn As String
-Private stock As Long
-Private recv As Long
-Private backlog As Long
-
-Public Property Get getBacklog() As Long
-
-    getBacklog = CLng(backlog)
-End Property
 
 
-Public Property Get getPN() As String
+
+Public Function getInputList() As Range
     
-    getPN = pn
-End Property
-
-Public Property Get getStock() As Long
-    getStock = stock
-End Property
-
-Public Sub setStock(arg As Long)
+    Dim lr As Long
+    lr = getLastRowFromInputList()
     
-    stock = CLng(arg)
-End Sub
+    If Trim(ThisWorkbook.Sheets(QT.G_SH_NM_IN).Range("A3").Value) <> "" Then
+        Set getInputList = ThisWorkbook.Sheets(QT.G_SH_NM_IN).Range("A2:A" & CStr(lr))
+    Else
+        Set getInputList = ThisWorkbook.Sheets(QT.G_SH_NM_IN).Range("A2:A" & 2)
+    End If
+End Function
 
-Public Property Get getRecv() As Long
-    getRecv = recv
-End Property
 
-Public Sub setRecv(arg As Long)
+Private Function getLastRowFromInputList() As Long
+
+
+    Dim r As Range
+    Set r = ThisWorkbook.Sheets(QT.G_SH_NM_IN).Range("A2")
+
+    Do
+        Set r = r.Offset(1, 0)
+    Loop Until Trim(r) = ""
     
-    recv = CLng(arg)
-End Sub
+    getLastRowFromInputList = CLng(r.Row - 1)
+End Function
 
-Public Sub setBacklog(arg As Long)
-    
-    backlog = CLng(arg)
-End Sub
-
-
-
-' niezwykle wazna metoda dodawania dla kolekcji ktora w tej klasie jest prywatna
-' nie mozemy tak po prostu dodac byle czego!
-' korzystamy tylko i wylacznie z tego suba - wymusza on na wpisywaniu tylko okreslonego typu do argumentu
-Public Sub addItem(i As CorailItem)
-    
-    cItems.Add i
-End Sub
-
-
-Public Property Get pItems() As Collection
-    Set pItems = cItems
-End Property
-
-
-
-Private Sub Class_Initialize()
-    Set cItems = New Collection
-    stock = 0
-    recv = 0
-    backlog = 0
-End Sub
-
-Private Sub Class_Terminate()
-    Set cItems = Nothing
-End Sub

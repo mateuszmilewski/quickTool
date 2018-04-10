@@ -35,9 +35,15 @@ Public i As HTMLInputElement
 
 Public recvInputElement As HTMLInputElement
 Public stockInputElement As HTMLInputElement
+Public backlogInputElement As HTMLInputElement
 Public partNumberInput As HTMLInputElement
 Public inputButton As HTMLInputButtonElement
 Public button As HTMLButtonElement
+
+Public irecvElement As IHTMLElement
+Public istockElement As IHTMLElement
+Public ibacklogElement As IHTMLElement
+
 
 Public a As HTMLAnchorElement
 Public s As HTMLSelectElement

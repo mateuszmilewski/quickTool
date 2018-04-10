@@ -103,7 +103,7 @@ Public Sub run(sh As Worksheet, repRow As Long)
         Loop Until CStr(dstr) = ""
     Else
         
-        Set r = sh.Cells(repRow, 6)
+        Set r = sh.Cells(repRow, 5)
         Do
         
             dstr = CStr(r.Parent.Cells(3, r.Column).Value)
@@ -172,26 +172,18 @@ Public Function getFirstDate() As Date
         Dim item As CorailItem
         Set item = dane.iteration.pItems(1)
         Dim tmpDate As Date
+        tmpDate = CDate(item.getDate())
         
-        
-        
-        If CLng(item.getDate()) > 0 Then
-        
-            tmpDate = CDate(item.getDate())
+    
+        For Each item In dane.iteration.pItems
             
-        
-            For Each item In dane.iteration.pItems
-                
-                If CDate(item.getDate) < CDate(tmpDate) Then
-                    tmpDate = item.getDate
-                End If
-                
-            Next item
+            If CDate(item.getDate) < CDate(tmpDate) Then
+                tmpDate = item.getDate
+            End If
             
-            getFirstDate = tmpDate
-        Else
-            getFirstDate = Date
-        End If
+        Next item
+        
+        getFirstDate = tmpDate
         
     Else
         getFirstDate = Date
@@ -206,27 +198,18 @@ Public Function getLastDate() As Date
         Dim item As CorailItem
         Set item = dane.iteration.pItems(1)
         Dim tmpDate As Date
+        tmpDate = CDate(item.getDate())
         
-        ' Debug.Print item.getDate() & " " & CLng(item.getDate())
-        
-        
-        If CLng(item.getDate()) > 0 Then
-        
-            tmpDate = CDate(item.getDate())
+    
+        For Each item In dane.iteration.pItems
             
-        
-            For Each item In dane.iteration.pItems
-                
-                If CDate(item.getDate) > CDate(tmpDate) Then
-                    tmpDate = item.getDate
-                End If
-                
-            Next item
+            If CDate(item.getDate) > CDate(tmpDate) Then
+                tmpDate = item.getDate
+            End If
             
-            getLastDate = tmpDate
-        Else
-            getLastDate = Date
-        End If
+        Next item
+        
+        getLastDate = tmpDate
         
     Else
         getLastDate = Date

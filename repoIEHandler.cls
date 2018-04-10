@@ -91,33 +91,17 @@ Public Sub closeInnerIE()
 End Sub
 
 
-Public Sub getNewInnerIE(r As Range, plt As String, pn As String, isCorail As Boolean)
+Public Sub getNewInnerIE(r As Range, plt As String, pn As String)
 
-    If isCorail Then
-        Set innerIE = New InternetExplorer
-        innerIE.Visible = True
-        url = generateURL(r, CStr(plt), CStr(pn))
-        innerIE.navigate CStr(url)
-        Me.innerWait
-    Else
-        Set innerIE = New InternetExplorer
-        innerIE.Visible = True
-        If Not sprawdzCzyPlantJestAktywnyISzybkiRefresh(plt) Then aktywujPlant plt
-        url = generateMaestroURL(r, CStr(plt), CStr(pn))
-        innerIE.navigate CStr(url)
-        Me.innerWait
-    End If
     
-End Sub
-
-Private Function sprawdzCzyPlantJestAktywnyISzybkiRefresh(plt As String) As Boolean
-    sprawdzCzyPlantJestAktywnyISzybkiRefresh = False
+    Set innerIE = New InternetExplorer
+    innerIE.Visible = True
     
+    url = generateURL(r, CStr(plt), CStr(pn))
     
-End Function
-
-Private Sub aktywujPlant(plt As String)
-
+    innerIE.navigate CStr(url)
+    Me.innerWait
+    
 End Sub
 
 Private Function generateURL(r As Range, pn As String, plt As String) As String
@@ -137,49 +121,17 @@ Private Function generateURL(r As Range, pn As String, plt As String) As String
         
         ' --------------------------------------------------------------------------------------------------------
         
-        If Trim(CStr(sh.Range("A" & CStr(i)).Value)) <> "" Then
+        If plt = CStr(sh.Range("A" & CStr(i)).Value) Then
         
-            If plt = CStr(sh.Range("A" & CStr(i)).Value) Then
-            
-                generateURL = CStr(sh.Range("C" & CStr(i)).Value) & "getProductSummaryRead.do?beanId=" & CStr(pn) & "#"
-                Exit For
-            End If
-        
-        Else
+            generateURL = CStr(sh.Range("C" & CStr(i)).Value) & "getProductSummaryRead.do?beanId=" & CStr(pn) & "#"
             Exit For
         End If
+        
+        
         ' --------------------------------------------------------------------------------------------------------
     Next i
     
     
-End Function
-
-Private Function generateMaestroURL(r As Range, pn As String, plt As String) As String
-    generateMaestroURL = ""
-    
-    Dim sh As Worksheet
-    Set sh = ThisWorkbook.Sheets(QT.G_SH_NM_PLT_LIST)
-    
-    
-    
-    ' CORAIL LOOP
-    For i = QT.G_CORAIL_FIRST_PLT To QT.G_CORAIL_LAST_PLT
-        
-        ' --------------------------------------------------------------------------------------------------------
-        
-        If Trim(CStr(sh.Range("A" & CStr(i)).Value)) <> "" Then
-        
-            If plt = CStr(sh.Range("A" & CStr(i)).Value) Then
-            
-                generateURL = CStr(sh.Range("C" & CStr(i)).Value) & QT.G_MAESTRO_URL_EXT & CStr(pn) & "#"
-                Exit For
-            End If
-        
-        Else
-            Exit For
-        End If
-        ' --------------------------------------------------------------------------------------------------------
-    Next i
 End Function
 
 
@@ -209,9 +161,7 @@ Public Sub braceWithDom(e As E_TYPE_OF_CORAIL)
                 Set .iElementCollectionOfShipments = .doc.getElementsByClassName("ecwButtonTexteOverShipped number ecwButtonTexteOver")
                 
                 
-                ' this double logic is created becuase in old projects there was undefined issue with assigning problem between objects
-                ' im not sure why it is working in this way, but from time to time i need to be sure that i assign object properly
-                ' so im doubling process of taking elements by tag name of input and give it some extra sleep time...
+                
                 Me.innerWait
                 DoEvents
                 Sleep 200
@@ -293,18 +243,6 @@ Public Sub braceWithDom(e As E_TYPE_OF_CORAIL)
                 Set .recvInputElement = .doc.getElementById("receivedOnSite")
                 Set .backlogInputElement = .doc.getElementById("efXpLate")
                 
-            ElseIf e = MAESTRO Then
-            
-                ' Set .istockElement = tryGetDataFromMaestro("stock")
-                
-            ElseIf e = MANUAL Then
-            
-                Set stockInputElement = Nothing
-                Set recvInputElement = Nothing
-                Set backlogInputElement = Nothing
-                
-                
-                
             End If
             
             
@@ -318,37 +256,6 @@ Public Sub braceWithDom(e As E_TYPE_OF_CORAIL)
     
 End Sub
 
-Private Function tryToGetDataFromMaestro(what As String) As IHTMLElement
-
-    Set tryToGetDataFromMaestro = Nothing
-    
-    
-    If Not innerIE Is Nothing Then
-    
-        Me.innerWait
-        
-        With dom
-        
-        
-            Set .doc = innerIE.document
-            Set .idoc = innerIE.document
-    
-            Me.innerWait
-            DoEvents
-            Sleep 200
-            Set .iElementCollection = .doc.getElementsByTagName("font")
-            
-            podlicz = 0
-            For Each el In .iElementCollection
-                
-                Set iElement = el
-                If Not iElement Is Nothing Then Debug.Print iElement.innerHTML
-            Next el
-            
-        End With
-
-End Function
-
 
 
 Public Sub setIEWithLoggedCorail()
@@ -361,7 +268,7 @@ End Sub
 
 Public Sub closeAllIEs()
 
-    powloka.zamknijWszystkiePrzegladarki
+    powloka.zamknijWszystkiePrzegladarkiZCorail
 End Sub
 
 
