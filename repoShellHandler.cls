@@ -94,30 +94,6 @@ Public Function catchLoggedCorail() As InternetExplorer
 End Function
 
 
-Public Sub zamknijWszystkiePrzegladarki()
-    
-    Dim tmpCollectionOfIes As New Collection
-    Dim tmpIE As InternetExplorer
-    
-    
-    For Each item In shWin
-        On Error Resume Next
-        If CStr(item) Like "*Internet*Explorer*" Then
-        
-            Set tmpIE = Nothing
-            Set tmpIE = item
-            tmpCollectionOfIes.Add tmpIE
-        End If
-    Next item
-    
-    
-    For Each tmpIE In tmpCollectionOfIes
-        tmpIE.Quit
-        Set tmpIE = Nothing
-    Next tmpIE
-End Sub
-
-
 Public Sub zamknijWszystkiePrzegladarkiZCorail()
 
     Dim tmpCollectionOfIes As New Collection

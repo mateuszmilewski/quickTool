@@ -38,7 +38,7 @@ Global Const G_SH_NM_PLT_LIST = "plt-list"
 Global Const G_LIMIT_IE = 2
 
 Global Const G_CORAIL_FIRST_PLT = 3
-Global Const G_CORAIL_LAST_PLT = 100
+Global Const G_CORAIL_LAST_PLT = 9
 
 ' ---------------------------------------------
 
@@ -51,7 +51,7 @@ Global Const G_CORAIL_LAST_PLT = 100
 Global Const G_BLUE_TXT = "BLUE"
 Global Const G_ORANGE_TXT = "ORANGE"
 Global Const G_MANUAL_TXT = "MANUAL"
-Global Const G_MAESTRO_TXT = "MAESTRO"
+
 
 ' ---------------------------------------------
 
@@ -65,11 +65,10 @@ Global Const G_INNER_MAIN_FRAME_ID = "frmMain"
 
 
 
-' to get the frames directly!
+' FOR URL STUFF
 ' ---------------------------------------------
 ' getProductSummaryRead.do?beanId=96661053ZD#
 Global Const G_URL_EXT = "getProductSummaryRead.do?beanId="
-Global Const G_MAESTRO_URL_EXT = "produit.do?methode=init&selectedcodeProduit="
 ' ---------------------------------------------
 
 

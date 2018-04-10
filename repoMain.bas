@@ -1,5 +1,4 @@
-Attribute VB_Name = "EnumModule"
-
+Attribute VB_Name = "Main"
 'The MIT License (MIT)
 '
 'Copyright (c) 2017 FORREST
@@ -23,18 +22,28 @@ Attribute VB_Name = "EnumModule"
 'OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 'SOFTWARE.
 
-Public Enum E_TYPE_OF_CORAIL
-    BLUE
-    ORANGE
-    MANUAL
-    MAESTRO
-    UNDEF
-End Enum
+
+Public Sub runMain(ictrl As IRibbonControl)
+    
+    Main
+    
+    MsgBox "Gotowe!"
+End Sub
+
+Public Sub Main()
+    
+    ' ------------------------------------------------------------------------
+    
+    Dim c As CorailHelper, i As InputListHelper
+    Set c = New CorailHelper
+    Set i = New InputListHelper
+    c.run i
+    
+    c.putDataOnReportSheet
+    c.makeLayout
+    
+    ' ------------------------------------------------------------------------
+End Sub
 
 
 
-Public Enum E_LANG
-    PL = 1
-    ENG
-    FR
-End Enum

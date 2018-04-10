@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "CorailIteration"
+Attribute VB_Name = "CorailMaestro"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
@@ -30,72 +30,48 @@ Attribute VB_Exposed = False
 'OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 'SOFTWARE.
 
-Private item As CorailItem
-Private cItems As Collection
 
-Private pn As String
-Private stock As Long
-Private recv As Long
-Private backlog As Long
+Implements ICorail
 
-Public Property Get getBacklog() As Long
-
-    getBacklog = CLng(backlog)
-End Property
-
-
-Public Property Get getPN() As String
-    
-    getPN = pn
-End Property
-
-Public Property Get getStock() As Long
-    getStock = stock
-End Property
-
-Public Sub setStock(arg As Long)
-    
-    stock = CLng(arg)
-End Sub
-
-Public Property Get getRecv() As Long
-    getRecv = recv
-End Property
-
-Public Sub setRecv(arg As Long)
-    
-    recv = CLng(arg)
-End Sub
-
-Public Sub setBacklog(arg As Long)
-    
-    backlog = CLng(arg)
-End Sub
-
-
-
-' niezwykle wazna metoda dodawania dla kolekcji ktora w tej klasie jest prywatna
-' nie mozemy tak po prostu dodac byle czego!
-' korzystamy tylko i wylacznie z tego suba - wymusza on na wpisywaniu tylko okreslonego typu do argumentu
-Public Sub addItem(i As CorailItem)
-    
-    cItems.Add i
-End Sub
-
-
-Public Property Get pItems() As Collection
-    Set pItems = cItems
-End Property
-
-
+Private ieh As IEHandler
+Private parser As ParserHandler
 
 Private Sub Class_Initialize()
-    Set cItems = New Collection
-    stock = 0
-    recv = 0
-    backlog = 0
+    Set ieh = Nothing
+    Set parser = New ParserHandler
 End Sub
 
 Private Sub Class_Terminate()
-    Set cItems = Nothing
+    Set ieh = Nothing
+    Set parser = Nothing
 End Sub
+
+
+Private Sub ICorail_closeInnerIE()
+    
+    ieh.closeInnerIE
+    
+End Sub
+
+Private Sub ICorail_generateInnerIE(r As Range, plt As String, pn As String)
+    
+    Set ieh = New IEHandler
+    
+    If ieh.checkIfTisAvailable Then
+        ieh.pBlocked = True
+        
+        ieh.getNewInnerIE r, plt, pn, False
+        ieh.innerWait
+        ieh.braceWithDom MAESTRO
+    End If
+
+End Sub
+
+Private Function ICorail_getData() As ConvertedData
+
+    Set ICorail_getData = Nothing
+    
+End Function
+
+
+

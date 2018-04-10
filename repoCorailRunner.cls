@@ -69,8 +69,6 @@ Private Sub zdarzenie_initCorail(r As Range, kolekcja As Collection)
     pn = CStr(r.Offset(0, 1).Value)
     plt = CStr(r.Value)
     
-    
-    Dim e As E_TYPE_OF_CORAIL
     e = defineTypeOfCorail(CStr(r.Offset(0, 2).Value))
     
     If e = BLUE Then
@@ -78,10 +76,6 @@ Private Sub zdarzenie_initCorail(r As Range, kolekcja As Collection)
     ElseIf e = ORANGE Then
         Set c = New CorailOrange
     ElseIf e = MANUAL Then
-        Set c = New CorailManual
-    ElseIf e = MAESTRO Then
-        ' :) pls do not comment - i will treat maestro as corail interface OK?
-        ' Set c = New CorailMaestro
         Set c = New CorailManual
     Else
         Set c = Nothing
@@ -126,13 +120,7 @@ Private Function defineTypeOfCorail(txt As String) As E_TYPE_OF_CORAIL
         defineTypeOfCorail = ORANGE
     ElseIf txt = QT.G_MANUAL_TXT Then
         defineTypeOfCorail = MANUAL
-    ElseIf txt = QT.G_MAESTRO_TXT Then
-        defineTypeOfCorail = MAESTRO
     Else
         defineTypeOfCorail = UNDEF
     End If
 End Function
-
-Private Sub zdarzenie_returnCollection(kolekcja As Collection)
-    ' Set kolekcjaDanych = kolekcja
-End Sub
