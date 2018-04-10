@@ -27,7 +27,6 @@ Public Enum E_TYPE_OF_CORAIL
     BLUE
     ORANGE
     MANUAL
-    MAESTRO
     UNDEF
 End Enum
 

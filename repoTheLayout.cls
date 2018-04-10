@@ -95,8 +95,6 @@ Public Function getDatesFromDropperAndFillLabels(r As Range, c As Collection) As
     
     Dim tempDate As Date
     tempDate = d1
-    
-    If CLng(tempDate) = 0 Then tempDate = Date
     Do
         r.Offset(-1, 0).Value = CStr(tempDate)
         r.Offset(-1, 3).Value = CStr(Weekday(tempDate, vbMonday))

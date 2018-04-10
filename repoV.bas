@@ -100,7 +100,7 @@ Attribute VB_Name = "V"
 ' 2018-03-06
 ' v0.7
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-' adjust for safe mode in IE
+' adjust for safe mode in IE\
 ' removal of some logic inside layout changes
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -120,15 +120,4 @@ Attribute VB_Name = "V"
 ' fix on datadownload - some issues behind taking data and wrong count on balance taking zero from decimal places
 ' as a "normal" zeros - to be fix on this version
 ' + dropper handler - added backlog ficzer
-''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
-
-' 2018-04-10
-' v0.91
-''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-'
-' temp solution for maestro will be treat as manual plan - only filled by zeros and formulas
-' some extra fixes on dates and issues on out of range possibility also to be fixed in near future with
-' ranges which are too long - some limitation required from end-user.
-'
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''

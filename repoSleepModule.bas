@@ -1,5 +1,4 @@
-Attribute VB_Name = "EnumModule"
-
+Attribute VB_Name = "SleepModule"
 'The MIT License (MIT)
 '
 'Copyright (c) 2017 FORREST
@@ -23,18 +22,10 @@ Attribute VB_Name = "EnumModule"
 'OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 'SOFTWARE.
 
-Public Enum E_TYPE_OF_CORAIL
-    BLUE
-    ORANGE
-    MANUAL
-    MAESTRO
-    UNDEF
-End Enum
 
+#If VBA7 Then
+    Public Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As LongPtr) 'For 64 Bit Systems
+#Else
+    Public Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long) 'For 32 Bit Systems
+#End If
 
-
-Public Enum E_LANG
-    PL = 1
-    ENG
-    FR
-End Enum

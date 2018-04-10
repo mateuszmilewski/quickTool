@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "CorailIteration"
+Attribute VB_Name = "DOMHandler"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
@@ -30,72 +30,37 @@ Attribute VB_Exposed = False
 'OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 'SOFTWARE.
 
-Private item As CorailItem
-Private cItems As Collection
 
-Private pn As String
-Private stock As Long
-Private recv As Long
-Private backlog As Long
+Public i As HTMLInputElement
 
-Public Property Get getBacklog() As Long
+Public recvInputElement As HTMLInputElement
+Public stockInputElement As HTMLInputElement
+Public backlogInputElement As HTMLInputElement
+Public partNumberInput As HTMLInputElement
+Public inputButton As HTMLInputButtonElement
+Public button As HTMLButtonElement
 
-    getBacklog = CLng(backlog)
-End Property
+Public a As HTMLAnchorElement
+Public s As HTMLSelectElement
+
+Public elementCollection As HTMLElementCollection
+Public iElementCollection As IHTMLElementCollection
 
 
-Public Property Get getPN() As String
-    
-    getPN = pn
-End Property
+Public idoc As IHTMLDocument
+Public doc As HTMLDocument
 
-Public Property Get getStock() As Long
-    getStock = stock
-End Property
+Public iElement As IHTMLElement
 
-Public Sub setStock(arg As Long)
-    
-    stock = CLng(arg)
-End Sub
-
-Public Property Get getRecv() As Long
-    getRecv = recv
-End Property
-
-Public Sub setRecv(arg As Long)
-    
-    recv = CLng(arg)
-End Sub
-
-Public Sub setBacklog(arg As Long)
-    
-    backlog = CLng(arg)
-End Sub
+Public table As HTMLTable
 
 
 
-' niezwykle wazna metoda dodawania dla kolekcji ktora w tej klasie jest prywatna
-' nie mozemy tak po prostu dodac byle czego!
-' korzystamy tylko i wylacznie z tego suba - wymusza on na wpisywaniu tylko okreslonego typu do argumentu
-Public Sub addItem(i As CorailItem)
-    
-    cItems.Add i
-End Sub
-
-
-Public Property Get pItems() As Collection
-    Set pItems = cItems
-End Property
+Public iElementCollectionOfDates As IHTMLElementCollection
+Public iElementCollectionOfRqms1 As IHTMLElementCollection
+Public iElementCollectionOfRqms2 As IHTMLElementCollection
+Public iElementCollectionOfOrders As IHTMLElementCollection
+Public iElementCollectionOfShipments As IHTMLElementCollection
 
 
 
-Private Sub Class_Initialize()
-    Set cItems = New Collection
-    stock = 0
-    recv = 0
-    backlog = 0
-End Sub
-
-Private Sub Class_Terminate()
-    Set cItems = Nothing
-End Sub

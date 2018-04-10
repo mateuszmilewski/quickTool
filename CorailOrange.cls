@@ -62,7 +62,7 @@ Private Sub ICorail_generateInnerIE(r As Range, plt As String, pn As String)
     If ieh.checkIfTisAvailable Then
         ieh.pBlocked = True
         
-        ieh.getNewInnerIE r, plt, pn
+        ieh.getNewInnerIE r, plt, pn, True
         ieh.innerWait
         ieh.braceWithDom ORANGE
     End If
