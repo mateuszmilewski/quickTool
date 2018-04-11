@@ -186,24 +186,48 @@ End Function
 
 Public Sub iteracjaOtwierania(adr As String, isMaestroAvail As Boolean)
 
+    Dim ieh As IEHandler
+    Set ieh = New IEHandler
+    Dim ie As InternetExplorer
     Dim ir As Range
     Set ir = ThisWorkbook.Sheets(QT.G_SH_NM_PLT_LIST).Range(adr)
     
-    If (Not isMaestroAvail) And ir.Value Like "*maestro*" Then
+    
+    If isMaestroAvail And ir.Value Like "*maestro*" Then
+    
+        Set ie = New InternetExplorer
+        ie.Visible = True
+        ie.navigate CStr(ir.Value)
+        
+        ieh.pIE = ie
+        ieh.publicWait ie
+        Sleep 200
+        
+        ' fatal error - innerIE is nothing here
+        ' ieh.braceWithDom MAESTRO
+        
+        Dim doc As HTMLDocument
+        Set doc = ie.document
+        
+        Set ieh.dom.a = doc.getElementsByClassName("Intro")(0)
+        
+        Debug.Print ieh.dom.a.innerHTML
+        ieh.dom.a.Click
+        ieh.publicWait ie
         
     Else
 
-    Dim ie As InternetExplorer
-    Set ie = New InternetExplorer
-    ie.Visible = True
-    ie.navigate CStr(ir.Value)
-    
-    With ie
-    
-        Do
-            Sleep 100
-        Loop Until corailHelperIELoaded(ie)
-    End With
+        
+        Set ie = New InternetExplorer
+        ie.Visible = True
+        ie.navigate CStr(ir.Value)
+        
+        With ie
+        
+            Do
+                Sleep 100
+            Loop Until corailHelperIELoaded(ie)
+        End With
 
     End If
 End Sub

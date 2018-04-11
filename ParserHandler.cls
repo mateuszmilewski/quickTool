@@ -83,8 +83,6 @@ Public Function htmlTableToRawMatrix(tb As HTMLTable, dom As DOMHandler, e As E_
     
     
     htmlString = tb.innerHTML
-
-
     If checkIfHTMLTable(htmlString) Then
     
         If e = ORANGE Then
@@ -148,6 +146,7 @@ Public Function htmlTableToRawMatrix(tb As HTMLTable, dom As DOMHandler, e As E_
                             s = arr(1)
                             s = Replace(UCase(s), "</DIV", "")
                             s = Replace(s, ".0", "")
+                            s = Replace(s, ",0", "")
                             
                             i.order = CLng(s)
                             
@@ -158,6 +157,7 @@ Public Function htmlTableToRawMatrix(tb As HTMLTable, dom As DOMHandler, e As E_
                             s = arr(1)
                             s = Replace(UCase(s), "</DIV", "")
                             s = Replace(s, ".0", "")
+                            s = Replace(s, ",0", "")
                             
                             i.ship = CLng(s)
                             
@@ -243,6 +243,7 @@ Public Function htmlTableToRawMatrix(tb As HTMLTable, dom As DOMHandler, e As E_
                             s = arr(1)
                             s = Replace(UCase(s), "</DIV", "")
                             s = Replace(s, ".0", "")
+                            s = Replace(s, ",0", "")
                             
                             i.besoinsPC = CLng(s)
                             
@@ -253,6 +254,7 @@ Public Function htmlTableToRawMatrix(tb As HTMLTable, dom As DOMHandler, e As E_
                             s = arr(1)
                             s = Replace(UCase(s), "</DIV", "")
                             s = Replace(s, ".0", "")
+                            s = Replace(s, ",0", "")
                             
                             i.besoinsBC = CLng(s)
                             
@@ -263,6 +265,7 @@ Public Function htmlTableToRawMatrix(tb As HTMLTable, dom As DOMHandler, e As E_
                             s = arr(1)
                             s = Replace(UCase(s), "</DIV", "")
                             s = Replace(s, ".0", "")
+                            s = Replace(s, ",0", "")
                             
                             i.order = CLng(s)
                             
@@ -273,6 +276,7 @@ Public Function htmlTableToRawMatrix(tb As HTMLTable, dom As DOMHandler, e As E_
                             s = arr(1)
                             s = Replace(UCase(s), "</DIV", "")
                             s = Replace(s, ".0", "")
+                            s = Replace(s, ",0", "")
                             
                             i.ship = CLng(s)
                             
@@ -318,7 +322,100 @@ Public Function htmlTableToRawMatrix(tb As HTMLTable, dom As DOMHandler, e As E_
         
         
         
+        ElseIf e = MAESTRO Then
         
+            Set tmp = New ConvertedData
+            Set innerTb = tb
+        
+        
+            For Each r In innerTb.Rows
+            
+                Set i = Nothing
+                Set i = New CorailItem
+                
+                cCounter = 0
+            
+                For Each c In r.Cells
+                    
+                    ' Debug.Print c.innerHTML
+                    
+                    ' 0: date
+                    ' 1: rqm
+                    ' 2: order
+                    ' 3: it
+                    
+                    ' always
+                    s = CStr(c.innerHTML)
+                    
+                    If cCounter = 0 Then
+                        i.parseStringToDate Trim(s)
+                    ElseIf cCounter = 1 Then
+                    
+                        arr = Split(s, "<")
+                        s = Trim(arr(LBound(arr)))
+                        s = Replace(s, ".0", "")
+                        s = Replace(s, ",0", "")
+                        
+                        i.besoinsBC = 0
+                        i.besoinsPC = 0
+                        If IsNumeric(s) Then i.besoinsBC = CLng(s)
+                        
+                    ElseIf cCounter = 2 Then
+                    
+                        arr = Split(s, "<")
+                        s = Trim(arr(LBound(arr)))
+                        s = Replace(s, ".0", "")
+                        s = Replace(s, ",0", "")
+                        i.order = 0
+                        If IsNumeric(s) Then i.order = CLng(s)
+                        
+                    ElseIf cCounter = 3 Then
+                        If s Like "<FONT*" Then
+                            arr = Split(s, ">")
+                            arr = Split(arr(LBound(arr) + 1), "</")
+                        Else
+                            arr = Split(s, "<")
+                            arr = Split(arr(LBound(arr)), "</")
+                        End If
+                        s = Trim(arr(LBound(arr)))
+                        s = Replace(s, ".0", "")
+                        s = Replace(s, ",0", "")
+                        
+                        i.ship = 0
+                        If IsNumeric(s) Then i.ship = CLng(s)
+                    End If
+                    
+                    cCounter = cCounter + 1
+                Next c
+                
+                ii.addItem i
+            Next r
+            
+            If Not dom.istockElement Is Nothing Then
+                tmpStock = dom.istockElement.innerHTML
+                tmpStock = Replace(tmpStock, ".0", "")
+                tmpStock = Replace(tmpStock, ",0", "")
+                tmpStock = Trim(Replace(tmpStock, G_NBSP, ""))
+            End If
+            
+            If Not IsNumeric(tmpStock) Then tmpStock = "0"
+            
+            If Not dom.ibacklogElement Is Nothing Then
+                tmpBacklog = dom.ibacklogElement.innerHTML
+                tmpBacklog = Replace(tmpBacklog, ".0", "")
+                tmpBacklog = Replace(tmpBacklog, ",0", "")
+                tmpBacklog = Trim(Replace(tmpBacklog, G_NBSP, ""))
+            End If
+            
+            If Not IsNumeric(tmpBacklog) Then tmpBacklog = "0"
+            
+            
+            Set tmp.iteration = ii
+            tmp.iteration.setStock CLng(tmpStock)
+            tmp.iteration.setRecv CLng(0)
+            tmp.iteration.setBacklog CLng(tmpBacklog)
+            Set htmlTableToRawMatrix = tmp
+            
         Else
             MsgBox "brak zdefiniowanego systemu!"
             End

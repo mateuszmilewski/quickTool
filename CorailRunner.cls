@@ -81,8 +81,8 @@ Private Sub zdarzenie_initCorail(r As Range, kolekcja As Collection)
         Set c = New CorailManual
     ElseIf e = MAESTRO Then
         ' :) pls do not comment - i will treat maestro as corail interface OK?
-        ' Set c = New CorailMaestro
-        Set c = New CorailManual
+        ' Set c = New CorailManual
+        Set c = New CorailMaestro
     Else
         Set c = Nothing
     End If
@@ -92,7 +92,7 @@ Private Sub zdarzenie_initCorail(r As Range, kolekcja As Collection)
     
         With c
             
-            .generateInnerIE r, CStr(pn), CStr(plt)
+            .generateInnerIE r, CStr(plt), CStr(pn)
             Set dane = .getData()
     
     
