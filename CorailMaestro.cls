@@ -71,6 +71,33 @@ Private Function ICorail_getData() As ConvertedData
 
     Set ICorail_getData = Nothing
     
+    Set ieh.dom.iElement = tryToGetTableWithDateAndRqmsFromMaestro(ieh)
+    Set ieh.dom.table = ieh.dom.iElement
+    Set ICorail_getData = parser.htmlTableToRawMatrix(ieh.dom.table, ieh.dom, MAESTRO)
+    
+End Function
+
+
+Private Function tryToGetTableWithDateAndRqmsFromMaestro(ieh As IEHandler)
+    Set tryToGetTableWithDateAndRqmsFromMaestro = Nothing
+    
+    Set ieh.dom.iElementCollection = ieh.dom.doc.getElementsByTagName("table")
+    
+    podlicz = 0
+    
+    For Each el In ieh.dom.iElementCollection
+        Set ieh.dom.iElement = el
+        
+        ' Debug.Print ieh.dom.iElement.innerHTML
+        
+        If podlicz = 9 Then
+            Set tryToGetTableWithDateAndRqmsFromMaestro = ieh.dom.iElement
+            Exit Function
+        End If
+        
+        podlicz = podlicz + 1
+    Next el
+    
 End Function
 
 

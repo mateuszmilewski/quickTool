@@ -64,9 +64,10 @@ Private Sub openPartNumberOnProperCorail(corailType, plt, pn)
     Set r = sh.Range("A2")
     Do
     
-        If r.Value = plt And r.Offset(0, 3).Value = corailType Then
+        If Trim(r.Value) = Trim(plt) And r.Offset(0, 3).Value = corailType Then
             
-            openIEonProperPN r.Offset(0, 2), pn
+            If corailType <> "MAESTRO" Then openIEonProperPN r.Offset(0, 2), pn
+            If corailType = "MAESTRO" Then openIEonProperPltAndPartNumberInMaestro CStr(r.Offset(0, 2)), CStr(pn)
             Exit Do
         End If
     
@@ -74,6 +75,33 @@ Private Sub openPartNumberOnProperCorail(corailType, plt, pn)
     Loop Until Trim(r) = ""
 End Sub
 
+
+Private Sub openIEonProperPltAndPartNumberInMaestro(pltLink As String, pn As String)
+
+
+    
+    Dim pltIE As InternetExplorer
+    Dim pnIE As InternetExplorer
+    
+    Set pltIE = New InternetExplorer
+    Set pnIE = New InternetExplorer
+    
+    pltIE.Visible = True
+    pnIE.Visible = True
+    
+    pltIE.navigate CStr(pltLink)
+    DoEvents
+    Sleep 200
+    
+    
+    maestroSupplForUrl = QT.G_MAESTRO_URL_EXT
+    ' maestroBaseUrl = "http://maestro.inetpsa.com"
+    maestroBaseUrl = ThisWorkbook.Sheets("plt-list").Range("C2").Value
+    
+    pnIE.navigate maestroBaseUrl & "/" & maestroSupplForUrl & pn
+    
+    
+End Sub
 
 Private Sub openIEonProperPN(link, pn)
 

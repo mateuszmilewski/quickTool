@@ -50,6 +50,10 @@ Public Property Get pIE() As InternetExplorer
     Set pIE = ie
 End Property
 
+Public Property Let pIE(arg As InternetExplorer)
+    Set ie = arg
+End Property
+
 
 Public Property Get pBlocked() As Boolean
     pBlocked = blocked
@@ -102,8 +106,9 @@ Public Sub getNewInnerIE(r As Range, plt As String, pn As String, isCorail As Bo
     Else
         Set innerIE = New InternetExplorer
         innerIE.Visible = True
-        If Not sprawdzCzyPlantJestAktywnyISzybkiRefresh(plt) Then aktywujPlant plt
+        If Not sprawdzCzyPlantJestAktywnyISzybkiRefresh(plt) Then aktywujPlant plt, innerIE
         url = generateMaestroURL(r, CStr(plt), CStr(pn))
+        Me.innerWait
         innerIE.navigate CStr(url)
         Me.innerWait
     End If
@@ -112,15 +117,30 @@ End Sub
 
 Private Function sprawdzCzyPlantJestAktywnyISzybkiRefresh(plt As String) As Boolean
     sprawdzCzyPlantJestAktywnyISzybkiRefresh = False
-    
-    
 End Function
 
-Private Sub aktywujPlant(plt As String)
+Private Sub aktywujPlant(plt As String, ie As InternetExplorer)
 
+    Dim maestroPltUrl As String
+    Dim sh As Worksheet
+    Set sh = ThisWorkbook.Sheets(QT.G_SH_NM_PLT_LIST)
+    
+    
+    Dim r As Range
+    Set r = sh.Range("A2")
+    Do
+        If Trim(r) = Trim(plt) Then
+            maestroPltUrl = r.Offset(0, 2)
+            Exit Do
+        End If
+        Set r = r.Offset(1, 0)
+    Loop Until Trim(r) = ""
+
+    ie.navigate maestroPltUrl
+    Me.innerWait
 End Sub
 
-Private Function generateURL(r As Range, pn As String, plt As String) As String
+Private Function generateURL(r As Range, plt As String, pn As String) As String
 
     ' generateURL = "" & r.Offset(0, 2).Value & "/" & qt.G_URL_EXT &
     'generateURL = "http://ta.control.erp.corail.inetpsa.com/getProductSummaryRead.do?beanId=96661053ZD"
@@ -154,32 +174,14 @@ Private Function generateURL(r As Range, pn As String, plt As String) As String
     
 End Function
 
-Private Function generateMaestroURL(r As Range, pn As String, plt As String) As String
+Private Function generateMaestroURL(r As Range, plt As String, pn As String) As String
+
     generateMaestroURL = ""
     
     Dim sh As Worksheet
     Set sh = ThisWorkbook.Sheets(QT.G_SH_NM_PLT_LIST)
+    generateMaestroURL = CStr(sh.Range("C2")) & "/" & QT.G_MAESTRO_URL_EXT & CStr(pn)
     
-    
-    
-    ' CORAIL LOOP
-    For i = QT.G_CORAIL_FIRST_PLT To QT.G_CORAIL_LAST_PLT
-        
-        ' --------------------------------------------------------------------------------------------------------
-        
-        If Trim(CStr(sh.Range("A" & CStr(i)).Value)) <> "" Then
-        
-            If plt = CStr(sh.Range("A" & CStr(i)).Value) Then
-            
-                generateURL = CStr(sh.Range("C" & CStr(i)).Value) & QT.G_MAESTRO_URL_EXT & CStr(pn) & "#"
-                Exit For
-            End If
-        
-        Else
-            Exit For
-        End If
-        ' --------------------------------------------------------------------------------------------------------
-    Next i
 End Function
 
 
@@ -295,7 +297,8 @@ Public Sub braceWithDom(e As E_TYPE_OF_CORAIL)
                 
             ElseIf e = MAESTRO Then
             
-                ' Set .istockElement = tryGetDataFromMaestro("stock")
+                Set .istockElement = tryGetDataFromMaestro("stock")
+                Set .ibacklogElement = tryGetDataFromMaestro("backlog")
                 
             ElseIf e = MANUAL Then
             
@@ -318,9 +321,9 @@ Public Sub braceWithDom(e As E_TYPE_OF_CORAIL)
     
 End Sub
 
-Private Function tryToGetDataFromMaestro(what As String) As IHTMLElement
+Private Function tryGetDataFromMaestro(what As String) As IHTMLElement
 
-    Set tryToGetDataFromMaestro = Nothing
+    Set tryGetDataFromMaestro = Nothing
     
     
     If Not innerIE Is Nothing Then
@@ -336,16 +339,51 @@ Private Function tryToGetDataFromMaestro(what As String) As IHTMLElement
             Me.innerWait
             DoEvents
             Sleep 200
-            Set .iElementCollection = .doc.getElementsByTagName("font")
+            
+            If what = "stock" Then
+                Set .iElementCollection = .doc.getElementsByTagName("font")
+            End If
+            If what = "backlog" Then
+                Set .iElementCollection = .doc.getElementsByClassName("Donnee")
+            End If
             
             podlicz = 0
             For Each el In .iElementCollection
                 
                 Set iElement = el
-                If Not iElement Is Nothing Then Debug.Print iElement.innerHTML
+                If Not iElement Is Nothing Then
+                    ' Debug.Print iElement.innerHTML
+                    
+                    If podlicz = 1 Then
+                    
+                        If what = "stock" Then
+                            Set tryGetDataFromMaestro = iElement
+                            Exit Function
+                        End If
+                    End If
+                    
+                    
+                    If what = "backlog" Then
+                    
+                        
+                        ' Debug.Print iElement.innerHTML
+                        
+                        
+                        If podlicz = 22 Then
+                            Set tryGetDataFromMaestro = iElement
+                            Exit Function
+                        End If
+                    End If
+                
+                End If
+                
+                podlicz = podlicz + 1
+                
+                
             Next el
             
         End With
+    End If
 
 End Function
 
@@ -401,6 +439,7 @@ Private Sub Class_Initialize()
     Set dom = New DOMHandler
     'Set ie = New InternetExplorer
     Set ie = Nothing
+    Set innerIE = Nothing
     
     On Error Resume Next
     Set powloka = New ShellHandler
@@ -416,12 +455,42 @@ Private Sub Class_Terminate()
     
     Set dom = Nothing
     Set ie = Nothing
+    Set innerIE = Nothing
     
     Set powloka = Nothing
     
 End Sub
 
 
+Public Sub publicWait(arg As InternetExplorer)
+    
+    ' this logic is not working with all configs with all pcs
+    'With innerIE
+    '
+    '    Do
+    '        DoEvents
+    '    Loop While .Busy Or .readyState = READYSTATE_LOADING
+    '
+    '    Do
+    '        DoEvents
+    '    Loop Until .readyState = READYSTATE_COMPLETE
+    'End With
+    
+    Dim x As Integer
+    x = 0
+
+    Do
+        
+        Sleep 100
+        x = x + 1
+        
+        If x > 500 Then
+            MsgBox "Timeout! Try again!"
+            End
+            
+        End If
+    Loop Until loaded(arg)
+End Sub
 
 Public Sub innerWait()
     

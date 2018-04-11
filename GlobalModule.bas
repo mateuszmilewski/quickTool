@@ -78,3 +78,8 @@ Global Const G_MAESTRO_URL_EXT = "produit.do?methode=init&selectedcodeProduit="
 ' ---------------------------------------------
 Global isMaestroAvail As Boolean
 ' ---------------------------------------------
+
+
+' ---------------------------------------------
+Global Const G_NBSP = "&nbsp;"
+' ---------------------------------------------
